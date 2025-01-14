@@ -16,7 +16,14 @@ public class Interval<T extends Comparable<T>> {
     }
 
     public boolean intersects(Interval<T> other) {
-        return (this.start.compareTo(other.start) <= 0 && this.end.compareTo(other.start) >= 0) ||
-                (other.start.compareTo(this.start) <= 0 && other.end.compareTo(this.start) >= 0);
+        return (this.start.compareTo(other.end) <= 0 && this.end.compareTo(other.start) >= 0);
+    }
+
+    public boolean intersects(T other) {
+        return this.start.compareTo(other) <= 0 && this.start.compareTo(other) >= 0;
+    }
+
+    public boolean contains(Interval<T> other) {
+        return this.start.compareTo(other.start) <= 0 && this.end.compareTo(other.end) >= 0;
     }
 }

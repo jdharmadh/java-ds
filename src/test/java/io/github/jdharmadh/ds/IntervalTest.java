@@ -32,11 +32,32 @@ public class IntervalTest {
         i2 = new Interval<Integer>(2, 3);
         assertTrue(i1.intersects(i2));
 
-        // Test invalid interval
-        try {
-            new Interval<Integer>(5, 1);
-        } catch (IllegalArgumentException e) {
-            // Expected exception
-        }
+    }
+    @Test
+    public void testContains() {
+        // Test interval containing another interval
+        Interval<Integer> i1 = new Interval<Integer>(1, 5);
+        Interval<Integer> i2 = new Interval<Integer>(2, 3);
+        assertTrue(i1.contains(i2));
+
+        // Test interval not containing another interval
+        i1 = new Interval<Integer>(1, 3);
+        i2 = new Interval<Integer>(2, 4);
+        assertFalse(i1.contains(i2));
+
+        // Test interval containing itself
+        i1 = new Interval<Integer>(1, 4);
+        i2 = new Interval<Integer>(1, 4);
+        assertTrue(i1.contains(i2));
+
+        // Test interval not containing another interval with same start but different end
+        i1 = new Interval<Integer>(1, 3);
+        i2 = new Interval<Integer>(1, 4);
+        assertFalse(i1.contains(i2));
+
+        // Test interval not containing another interval with same end but different start
+        i1 = new Interval<Integer>(2, 4);
+        i2 = new Interval<Integer>(1, 4);
+        assertFalse(i1.contains(i2));
     }
 }
