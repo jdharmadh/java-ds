@@ -26,4 +26,8 @@ public class Interval<T extends Comparable<T>> {
     public boolean contains(Interval<T> other) {
         return this.start.compareTo(other.start) <= 0 && this.end.compareTo(other.end) >= 0;
     }
+
+    public String toString() {
+        return "[" + this.start.toString() + ", " + this.end.toString() + "]";
+    }
 }
