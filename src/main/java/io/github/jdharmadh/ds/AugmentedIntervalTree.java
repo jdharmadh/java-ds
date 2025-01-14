@@ -1,5 +1,6 @@
 package io.github.jdharmadh.ds;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AugmentedIntervalTree<T extends Comparable<T>> {
@@ -48,6 +49,38 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
         if (cur.right != null && cur.right.maxValue.compareTo(cur.maxValue) > 0)
             cur.maxValue = cur.right.maxValue;
         return cur;
+    }
+
+    public List<Interval<T>> query(T point) {
+        List<Interval<T>> results = new ArrayList<>();
+        query(root, point, results);
+        return results;
+    }
+
+    public List<Interval<T>> query(Interval<T> interval) {
+        List<Interval<T>> results = new ArrayList<>();
+        query(root, interval, results);
+        return results;
+    }
+
+    private void query(IntervalTreeNode cur, T point, List<Interval<T>> results) {
+        if (cur == null || point.compareTo(cur.maxValue) > 0)
+            return;
+        if (cur.interval.intersects(point))
+            results.add(cur.interval);
+        query(cur.left, point, results);
+        if (point.compareTo(cur.interval.start) >= 0)
+            query(cur.right, point, results);
+    }
+
+    private void query(IntervalTreeNode cur, Interval<T> interval, List<Interval<T>> results) {
+        if (cur == null || interval.start.compareTo(cur.maxValue) > 0)
+            return;
+        if (cur.interval.intersects(interval))
+            results.add(cur.interval);
+        query(cur.left, interval, results);
+        if (interval.end.compareTo(cur.interval.start) >= 0)
+            query(cur.right, interval, results);
     }
 
     public void print() {

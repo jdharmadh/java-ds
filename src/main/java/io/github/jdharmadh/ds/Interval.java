@@ -20,7 +20,7 @@ public class Interval<T extends Comparable<T>> {
     }
 
     public boolean intersects(T other) {
-        return this.start.compareTo(other) <= 0 && this.start.compareTo(other) >= 0;
+        return this.start.compareTo(other) <= 0 && this.end.compareTo(other) >= 0;
     }
 
     public boolean contains(Interval<T> other) {
