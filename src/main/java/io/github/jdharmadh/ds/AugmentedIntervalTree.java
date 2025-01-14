@@ -5,9 +5,8 @@ import java.util.List;
 
 public class AugmentedIntervalTree<T extends Comparable<T>> {
     class IntervalTreeNode {
-        Interval<T> interval;
+        final Interval<T> interval;
         T maxValue;
-
         IntervalTreeNode left;
         IntervalTreeNode right;
 
@@ -21,7 +20,7 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
         }
     }
 
-    IntervalTreeNode root = null;
+    private IntervalTreeNode root = null;
 
     public void insert(Interval<T> interval) {
         this.root = insert(interval, this.root);
@@ -37,12 +36,9 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
         if (compareIntervals == 0)
             compareIntervals = interval.end.compareTo(cur.interval.end);
         if (compareIntervals < 0) {
-            // insert left
             cur.left = insert(interval, cur.left);
         } else if (compareIntervals > 0) {
             cur.right = insert(interval, cur.right);
-        } else {
-            // already exists??
         }
         if (cur.left != null && cur.left.maxValue.compareTo(cur.maxValue) > 0)
             cur.maxValue = cur.left.maxValue;
@@ -83,15 +79,17 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
             query(cur.right, interval, results);
     }
 
-    public void print() {
-        read(this.root);
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        read(this.root, sb);
+        return sb.toString();
     }
 
-    private void read(IntervalTreeNode cur) {
+    private void read(IntervalTreeNode cur, StringBuilder sb) {
         if (cur == null)
             return;
-        System.out.println(cur);
-        read(cur.left);
-        read(cur.right);
+        sb.append(cur);
+        read(cur.left, sb);
+        read(cur.right, sb);
     }
 }
