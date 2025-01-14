@@ -32,6 +32,16 @@ public class IntervalTest {
         i2 = new Interval<Integer>(2, 3);
         assertTrue(i1.intersects(i2));
 
+        // Test intervals with Double
+        Interval<Double> d1 = new Interval<Double>(1.1, 4.4);
+        Interval<Double> d2 = new Interval<Double>(2.2, 5.5);
+        assertTrue(d1.intersects(d2));
+
+        // Test intervals with String
+        Interval<String> s1 = new Interval<String>("apple", "mango");
+        Interval<String> s2 = new Interval<String>("banana", "orange");
+        assertTrue(s1.intersects(s2));
+
     }
     @Test
     public void testContains() {

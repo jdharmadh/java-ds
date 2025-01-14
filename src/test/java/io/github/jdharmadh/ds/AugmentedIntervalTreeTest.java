@@ -127,4 +127,123 @@ public class AugmentedIntervalTreeTest {
         result = tree.query(queryInterval);
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void testInsertAndQueryWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("f", "j");
+        Interval<String> i3 = new Interval<>("k", "o");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+        stringTree.insert(i3);
+
+        List<Interval<String>> result = stringTree.query("g");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(i2));
+
+        result = stringTree.query("l");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(i3));
+
+        result = stringTree.query("e");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(i1));
+    }
+
+    @Test
+    public void testQueryMultipleIntervalsWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("c", "g");
+        Interval<String> i3 = new Interval<>("f", "j");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+        stringTree.insert(i3);
+
+        List<Interval<String>> result = stringTree.query("d");
+        assertEquals(2, result.size());
+        assertTrue(result.contains(i1));
+        assertTrue(result.contains(i2));
+
+        result = stringTree.query("g");
+        assertEquals(2, result.size());
+        assertTrue(result.contains(i2));
+        assertTrue(result.contains(i3));
+    }
+
+    @Test
+    public void testQueryNoIntervalsWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("f", "j");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+
+        List<Interval<String>> result = stringTree.query("k");
+        assertTrue(result.isEmpty());
+
+        result = stringTree.query("z");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testInsertDuplicateIntervalsWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("a", "e");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+
+        List<Interval<String>> result = stringTree.query("c");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(i1));
+    }
+
+    @Test
+    public void testQueryIntervalWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("f", "j");
+        Interval<String> i3 = new Interval<>("k", "o");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+        stringTree.insert(i3);
+
+        Interval<String> queryInterval = new Interval<>("d", "m");
+        List<Interval<String>> result = stringTree.query(queryInterval);
+        assertEquals(3, result.size());
+        assertTrue(result.contains(i1));
+        assertTrue(result.contains(i2));
+        assertTrue(result.contains(i3));
+
+        queryInterval = new Interval<>("e", "f");
+        result = stringTree.query(queryInterval);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(i1));
+        assertTrue(result.contains(i2));
+    }
+
+    @Test
+    public void testQueryIntervalNoMatchWithString() {
+        AugmentedIntervalTree<String> stringTree = new AugmentedIntervalTree<>();
+        Interval<String> i1 = new Interval<>("a", "e");
+        Interval<String> i2 = new Interval<>("f", "j");
+
+        stringTree.insert(i1);
+        stringTree.insert(i2);
+
+        Interval<String> queryInterval = new Interval<>("k", "o");
+        List<Interval<String>> result = stringTree.query(queryInterval);
+        assertTrue(result.isEmpty());
+
+        queryInterval = new Interval<>("z", "z");
+        result = stringTree.query(queryInterval);
+        assertTrue(result.isEmpty());
+    }
 }
