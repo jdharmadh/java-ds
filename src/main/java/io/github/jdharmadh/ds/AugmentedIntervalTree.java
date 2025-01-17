@@ -12,18 +12,18 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
 
         public IntervalTreeNode(Interval<T> interval) {
             this.interval = interval;
-            this.maxValue = interval.end;
+            maxValue = interval.end;
         }
 
         public String toString() {
-            return "(" + this.interval.toString() + ", " + this.maxValue.toString() + ")";
+            return "(" + interval.toString() + ", " + maxValue.toString() + ")";
         }
     }
 
     private IntervalTreeNode root = null;
 
     public void insert(Interval<T> interval) {
-        this.root = insert(interval, this.root);
+        root = insert(interval, root);
     }
 
     private IntervalTreeNode insert(Interval<T> interval, IntervalTreeNode cur) {
@@ -81,7 +81,7 @@ public class AugmentedIntervalTree<T extends Comparable<T>> {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        read(this.root, sb);
+        read(root, sb);
         return sb.toString();
     }
 
