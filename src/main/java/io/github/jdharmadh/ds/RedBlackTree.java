@@ -9,6 +9,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         T data;
         RedBlackNode left;
         RedBlackNode right;
+        RedBlackNode parent;
         RedBlackColors color;
 
         public RedBlackNode(T data) {
@@ -24,38 +25,43 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     public void insert(T data) {
-        root = insert(data, root);
-    }
+        RedBlackNode prev = null;
+        RedBlackNode cur = root;
+        while (cur != null) {
+            prev = cur;
+            if (data.compareTo(cur.data) < 0) {
+                cur = cur.left;
+            } else if (data.compareTo(cur.data) > 0) {
+                cur = cur.right;
+            } else {
+                cur.data = data;
+                return;
+            }
+        }
+        cur = new RedBlackNode(data);
+        cur.parent = prev;
+        if (prev == null) {
+            root = cur;
+        } else if (prev.data.compareTo(data) < 0) {
+            prev.right = cur;
 
-    private RedBlackNode insert(T data, RedBlackNode cur) {
-        if (cur == null) {
-            RedBlackNode newNode = new RedBlackNode(data);
-            return newNode;
-        }
-        if (data.compareTo(cur.data) < 0) {
-            cur.left = insert(data, cur.left);
-        } else if (data.compareTo(cur.data) > 0) {
-            cur.right = insert(data, cur.right);
         } else {
-            cur.data = data;
+            prev.left = cur;
         }
-        return cur;
     }
 
     public T query(T data) {
-        return query(data, root);
-    }
-
-    private T query(T data, RedBlackNode cur){
-        if (cur == null) {
-            return null;
+        RedBlackNode cur = root;
+        while (cur != null) {
+            if (data.compareTo(cur.data) < 0) {
+                cur = cur.left;
+            } else if (data.compareTo(cur.data) > 0) {
+                cur = cur.right;
+            } else {
+                return data;
+            }
         }
-        if (data.compareTo(cur.data) < 0) {
-            return query(data, cur.left);
-        } else if (data.compareTo(cur.data) > 0) {
-            return query(data, cur.right);
-        }
-        return cur.data;
+        return null;
     }
 
     public void delete(T data) {
