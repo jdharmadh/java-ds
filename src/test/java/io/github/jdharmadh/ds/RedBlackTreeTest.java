@@ -134,5 +134,54 @@ public class RedBlackTreeTest {
         assertEquals((Integer) 7, tree.query(7));
         assertEquals((Integer) 12, tree.query(12));
         assertEquals((Integer) 17, tree.query(17));
+        tree.checkInvariant();
+
+        tree.remove(1);
+        assertNull(tree.query(1));
+        assertEquals((Integer) 7, tree.query(7));
+        assertEquals((Integer) 12, tree.query(12));
+        assertEquals((Integer) 17, tree.query(17));
+        assertEquals((Integer) 22, tree.query(22));
+        tree.checkInvariant();
+
+        tree.remove(7);
+        assertNull(tree.query(7));
+        assertEquals((Integer) 12, tree.query(12));
+        assertEquals((Integer) 17, tree.query(17));
+        assertEquals((Integer) 22, tree.query(22));
+        assertEquals((Integer) 27, tree.query(27));
+        tree.checkInvariant();
+
+        tree.remove(12);
+        assertNull(tree.query(12));
+        assertEquals((Integer) 17, tree.query(17));
+        assertEquals((Integer) 22, tree.query(22));
+        assertEquals((Integer) 27, tree.query(27));
+        assertEquals((Integer) 3, tree.query(3));
+        tree.checkInvariant();
+
+        tree.remove(17);
+        assertNull(tree.query(17));
+        assertEquals((Integer) 22, tree.query(22));
+        assertEquals((Integer) 27, tree.query(27));
+        assertEquals((Integer) 3, tree.query(3));
+        assertEquals((Integer) 8, tree.query(8));
+        tree.checkInvariant();
+
+        tree.remove(22);
+        assertNull(tree.query(22));
+        assertEquals((Integer) 27, tree.query(27));
+        assertEquals((Integer) 3, tree.query(3));
+        assertEquals((Integer) 8, tree.query(8));
+        assertEquals((Integer) 13, tree.query(13));
+        tree.checkInvariant();
+
+        tree.remove(27);
+        assertNull(tree.query(27));
+        assertEquals((Integer) 3, tree.query(3));
+        assertEquals((Integer) 8, tree.query(8));
+        assertEquals((Integer) 13, tree.query(13));
+        assertEquals((Integer) 18, tree.query(18));
+        tree.checkInvariant();
     }
 }

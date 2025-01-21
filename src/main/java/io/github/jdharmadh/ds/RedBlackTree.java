@@ -16,6 +16,10 @@ public class RedBlackTree<T extends Comparable<T>> {
             this.data = data;
             this.color = RedBlackColors.RED;
         }
+
+        public String toString() {
+            return data.toString();
+        }
     }
 
     private RedBlackNode root;
@@ -122,32 +126,36 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
     }
+    public RedBlackNode successor(RedBlackNode node) {
+        if (node.right != null) {
+            return leftmost(node.right);
+        }
+        RedBlackNode cur = node;
+        RedBlackNode parent = cur.parent;
+        while (parent != null && cur == parent.right) {
+            cur = parent;
+            parent = parent.parent;
+        }
+        return parent;
+    }
+
     public void delete(RedBlackNode node) {
         RedBlackColors originalColor = node.color;
         if (node.left != null && node.right != null) {
-            // two children, handle this later
-            RedBlackNode v = leftmost(node.right);
-            originalColor = v.color;
-            RedBlackNode x = v.right;
-            if (v.parent != node) {
-                shiftNodes(v, v.right);
-                v.right = node.right;
-                v.right.parent = v;
-            }
-            shiftNodes(node, v);
-            v.left = node.left;
-            v.left.parent = v;
-            v.color = node.color;
-            if (originalColor == BLACK) {
-                fixAfterDeletion(x);
-            }
+            RedBlackNode successor = successor(node);
+            node.data = successor.data;
+            delete(successor);
+            return;
         } else if (node.left != null || node.right != null) {
             // one child
             RedBlackNode replacement = node.left != null ? node.left : node.right;
             shiftNodes(node, replacement);
             if (originalColor == BLACK) {
-                fixAfterDeletion(replacement);
-                return;
+                if (replacement.color == RED) {
+                    replacement.color = BLACK;  // Maintain black height
+                } else {
+                    fixAfterDeletion(replacement);  // Handle double-black case
+                }
             }
         } else {
             // no children
@@ -173,7 +181,60 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private void fixAfterDeletion(RedBlackNode node) {
-
+        RedBlackNode cur = node;
+        while (cur != root && cur.color == BLACK) {
+            if (cur == cur.parent.left) {
+                RedBlackNode sibling = cur.parent.right;
+                assert (sibling != null);
+                if (sibling.color == RED) {
+                    sibling.color = BLACK;
+                    cur.parent.color = RED;
+                    rotateLeft(cur.parent);
+                    sibling = node.parent.right;
+                }
+                if (getColor(sibling.left) == BLACK && getColor(sibling.right) == BLACK) {
+                    sibling.color = RED;
+                    cur = cur.parent;
+                } else {
+                    if (getColor(sibling.right) == BLACK) {
+                        sibling.left.color = BLACK;
+                        sibling.color = RED;
+                        rotateRight(sibling);
+                        sibling = cur.parent.right;
+                    }
+                    sibling.color = cur.parent.color;
+                    cur.parent.color = BLACK;
+                    sibling.right.color = BLACK;
+                    rotateLeft(cur.parent);
+                    cur = root;
+                }
+            } else {
+                RedBlackNode sibling = cur.parent.left;
+                if (sibling.color == RED) {
+                    sibling.color = BLACK;
+                    cur.parent.color = RED;
+                    rotateRight(cur.parent);
+                    sibling = node.parent.left;
+                }
+                if (getColor(sibling.left) == BLACK && getColor(sibling.right) == BLACK) {
+                    sibling.color = RED;
+                    cur = cur.parent;
+                } else {
+                    if (getColor(sibling.left) == BLACK) {
+                        sibling.right.color = BLACK;
+                        sibling.color = RED;
+                        rotateLeft(sibling);
+                        sibling = cur.parent.left;
+                    }
+                    sibling.color = cur.parent.color;
+                    cur.parent.color = BLACK;
+                    sibling.left.color = BLACK;
+                    rotateRight(cur.parent);
+                    cur = root;
+                }
+            }
+        }
+        cur.color = BLACK;
     }
 
     private RedBlackNode leftmost(RedBlackNode node) {
@@ -289,5 +350,15 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
         return null;
+    }
+
+    public String toString() {
+        return toString(root);
+    }
+
+    private String toString(RedBlackNode cur) {
+        if (cur == null)
+            return "";
+        return cur.toString()+ " " + toString(cur.left) + " " + toString(cur.right);
     }
 }
