@@ -109,6 +109,92 @@ public class RedBlackTree<T extends Comparable<T>> {
         root.color = BLACK;
     }
 
+    public void remove(T data) {
+        RedBlackNode cur = root;
+        while (cur != null) {
+            if (data.compareTo(cur.data) < 0) {
+                cur = cur.left;
+            } else if (data.compareTo(cur.data) > 0) {
+                cur = cur.right;
+            } else {
+                delete(cur);
+                return;
+            }
+        }
+    }
+    public void delete(RedBlackNode node) {
+        RedBlackColors originalColor = node.color;
+        if (node.left != null && node.right != null) {
+            // two children, handle this later
+            RedBlackNode v = leftmost(node.right);
+            originalColor = v.color;
+            RedBlackNode x = v.right;
+            if (v.parent != node) {
+                shiftNodes(v, v.right);
+                v.right = node.right;
+                v.right.parent = v;
+            }
+            shiftNodes(node, v);
+            v.left = node.left;
+            v.left.parent = v;
+            v.color = node.color;
+            if (originalColor == BLACK) {
+                fixAfterDeletion(x);
+            }
+        } else if (node.left != null || node.right != null) {
+            // one child
+            RedBlackNode replacement = node.left != null ? node.left : node.right;
+            shiftNodes(node, replacement);
+            if (originalColor == BLACK) {
+                fixAfterDeletion(replacement);
+                return;
+            }
+        } else {
+            // no children
+            if (node.parent == null) {
+                // we are the only node in the tree, so we're done?
+                // assert (node == root && node.color == BLACK);
+                assert (node == root);
+                root = null;
+                return;
+            }
+            // we are a leaf, fix after deletion and then unlink ourselves
+            if (originalColor == BLACK) {
+                fixAfterDeletion(node);
+            }
+            if (node.parent != null) {
+                if (node == node.parent.left)
+                    node.parent.left = null;
+                else
+                    node.parent.right = null;
+                node.parent = null;
+            }
+        }
+    }
+
+    private void fixAfterDeletion(RedBlackNode node) {
+
+    }
+
+    private RedBlackNode leftmost(RedBlackNode node) {
+        RedBlackNode cur = node;
+        while (cur.left != null) {
+            cur = cur.left;
+        }
+        return cur;
+    }
+
+    private void shiftNodes(RedBlackNode o, RedBlackNode n) {
+        if (o.parent == null)
+            root = n;
+        else if (o == o.parent.left)
+            o.parent.left = n;
+        else
+            o.parent.right = n;
+        if (n != null)
+            n.parent = o.parent;
+    }
+
     private void rotateLeft(RedBlackNode node) {
         RedBlackNode r = node.right;
         node.right = r.left;
@@ -171,7 +257,8 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private void checkInvariantHelper(RedBlackNode cur) {
-        if (cur == null) return;
+        if (cur == null)
+            return;
         if (getColor(cur) == RED) {
             assert (getColor(cur.left) != RED && getColor(cur.right) != RED);
         }
@@ -180,11 +267,13 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private int blackHeight(RedBlackNode node) {
-        if (node == null) return 1;
+        if (node == null)
+            return 1;
         int leftHeight = blackHeight(node.left);
         int rightHeight = blackHeight(node.right);
         assert (leftHeight == rightHeight);
-        if (leftHeight == -1 || rightHeight == -1 || leftHeight != rightHeight) return -1;
+        if (leftHeight == -1 || rightHeight == -1 || leftHeight != rightHeight)
+            return -1;
         return leftHeight + (node.color == BLACK ? 1 : 0);
     }
 
@@ -200,9 +289,5 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
         return null;
-    }
-
-    public void delete(T data) {
-        // TODO
     }
 }
