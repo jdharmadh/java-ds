@@ -4,7 +4,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     static boolean RED = true;
     static boolean BLACK = false;
 
-    class RedBlackNode {
+    private class RedBlackNode {
         T data;
         RedBlackNode left;
         RedBlackNode right;
@@ -52,12 +52,13 @@ public class RedBlackTree<T extends Comparable<T>> {
             prev.left = cur;
         }
 
-        if (parent(cur) == null) {
+        if (cur.parent == null) {
             cur.color = BLACK;
             return;
         }
-        if (grandparent(cur) == null) { // todo: remove this by incorporating into the below logic??
-            cur.color = BLACK;
+
+        if (cur.parent.parent == null) {
+            cur.color = RED;
             return;
         }
 
@@ -65,45 +66,41 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private void fixAfterInsertion(RedBlackNode node) {
-        // Invariant: node is red
         while (node != root && node.parent.color == RED) {
             assert (node.color == RED);
-            if (node.parent == grandparent(node).left) {
+            if (node.parent == node.parent.parent.left) {
                 if (getColor(uncle(node)) == RED) {
-                    // Case 2
                     node.color = RED;
                     node.parent.color = BLACK;
                     uncle(node).color = BLACK;
-                    grandparent(node).color = RED;
-                    node = grandparent(node);
+                    node.parent.parent.color = RED;
+                    node = node.parent.parent;
                 } else {
-                    // Case 3
-                    if (node == parent(node).right) {
+                    if (node == node.parent.right) {
                         node = node.parent;
                         rotateLeft(node);
                     }
-                    parent(node).color = BLACK;
-                    grandparent(node).color = RED;
-                    if (grandparent(node) != null)
-                        rotateRight(grandparent(node));
+                    node.parent.color = BLACK;
+                    node.parent.parent.color = RED;
+                    if (node.parent.parent != null)
+                        rotateRight(node.parent.parent);
                 }
             } else {
                 if (getColor(uncle(node)) == RED) {
-                    // Case 2
                     node.color = RED;
                     node.parent.color = BLACK;
                     uncle(node).color = BLACK;
-                    grandparent(node).color = RED;
-                    node = grandparent(node);
+                    node.parent.parent.color = RED;
+                    node = node.parent.parent;
                 } else {
-                    if (node == parent(node).left) {
+                    if (node == node.parent.left) {
                         node = node.parent;
                         rotateRight(node);
                     }
-                    parent(node).color = BLACK;
-                    grandparent(node).color = RED;
-                    if (grandparent(node) != null)
-                        rotateLeft(grandparent(node));
+                    node.parent.color = BLACK;
+                    node.parent.parent.color = RED;
+                    if (node.parent.parent != null)
+                        rotateLeft(node.parent.parent);
                 }
             }
         }
@@ -122,19 +119,6 @@ public class RedBlackTree<T extends Comparable<T>> {
                 return;
             }
         }
-    }
-
-    public RedBlackNode successor(RedBlackNode node) {
-        if (node.right != null) {
-            return leftmost(node.right);
-        }
-        RedBlackNode cur = node;
-        RedBlackNode parent = cur.parent;
-        while (parent != null && cur == parent.right) {
-            cur = parent;
-            parent = parent.parent;
-        }
-        return parent;
     }
 
     public void delete(RedBlackNode node) {
@@ -235,6 +219,19 @@ public class RedBlackTree<T extends Comparable<T>> {
         cur.color = BLACK;
     }
 
+    public RedBlackNode successor(RedBlackNode node) {
+        if (node.right != null) {
+            return leftmost(node.right);
+        }
+        RedBlackNode cur = node;
+        RedBlackNode parent = cur.parent;
+        while (parent != null && cur == parent.right) {
+            cur = parent;
+            parent = parent.parent;
+        }
+        return parent;
+    }
+
     private RedBlackNode leftmost(RedBlackNode node) {
         RedBlackNode cur = node;
         while (cur.left != null) {
@@ -289,20 +286,10 @@ public class RedBlackTree<T extends Comparable<T>> {
 
     }
 
-    private RedBlackNode parent(RedBlackNode node) {
-        return node.parent;
-    }
-
     private RedBlackNode uncle(RedBlackNode node) {
-        assert (node.parent != null && node.parent.parent != null);
         if (node.parent.parent.left == node.parent)
             return node.parent.parent.right;
         return node.parent.parent.left;
-    }
-
-    private RedBlackNode grandparent(RedBlackNode node) {
-        assert (node.parent != null);
-        return node.parent.parent;
     }
 
     private boolean getColor(RedBlackNode node) {
@@ -336,7 +323,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         return leftHeight + (node.color == BLACK ? 1 : 0);
     }
 
-    public T query(T data) {
+    public T get(T data) {
         RedBlackNode cur = root;
         while (cur != null) {
             if (data.compareTo(cur.data) < 0) {
