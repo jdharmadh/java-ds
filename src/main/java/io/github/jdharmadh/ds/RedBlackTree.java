@@ -1,20 +1,19 @@
 package io.github.jdharmadh.ds;
 
-enum RedBlackColors {
-    RED, BLACK
-}
-
 public class RedBlackTree<T extends Comparable<T>> {
+    static boolean RED = true;
+    static boolean BLACK = false;
+
     class RedBlackNode {
         T data;
         RedBlackNode left;
         RedBlackNode right;
         RedBlackNode parent;
-        RedBlackColors color;
+        boolean color;
 
         public RedBlackNode(T data) {
             this.data = data;
-            this.color = RedBlackColors.RED;
+            this.color = RED;
         }
 
         public String toString() {
@@ -23,8 +22,6 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private RedBlackNode root;
-    static RedBlackColors RED = RedBlackColors.RED;
-    static RedBlackColors BLACK = RedBlackColors.BLACK;
 
     public RedBlackTree() {
         this.root = null;
@@ -56,11 +53,11 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
 
         if (parent(cur) == null) {
-            cur.color = RedBlackColors.BLACK;
+            cur.color = BLACK;
             return;
         }
         if (grandparent(cur) == null) { // todo: remove this by incorporating into the below logic??
-            cur.color = RedBlackColors.RED;
+            cur.color = BLACK;
             return;
         }
 
@@ -126,6 +123,7 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
     }
+
     public RedBlackNode successor(RedBlackNode node) {
         if (node.right != null) {
             return leftmost(node.right);
@@ -140,7 +138,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     public void delete(RedBlackNode node) {
-        RedBlackColors originalColor = node.color;
+        boolean originalColor = node.color;
         if (node.left != null && node.right != null) {
             RedBlackNode successor = successor(node);
             node.data = successor.data;
@@ -152,9 +150,9 @@ public class RedBlackTree<T extends Comparable<T>> {
             shiftNodes(node, replacement);
             if (originalColor == BLACK) {
                 if (replacement.color == RED) {
-                    replacement.color = BLACK;  // Maintain black height
+                    replacement.color = BLACK; // Maintain black height
                 } else {
-                    fixAfterDeletion(replacement);  // Handle double-black case
+                    fixAfterDeletion(replacement); // Handle double-black case
                 }
             }
         } else {
@@ -307,12 +305,12 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node.parent.parent;
     }
 
-    private RedBlackColors getColor(RedBlackNode node) {
-        return node != null ? node.color : RedBlackColors.BLACK;
+    private boolean getColor(RedBlackNode node) {
+        return node != null ? node.color : BLACK;
     }
 
     public void checkInvariant() {
-        assert (root.color == RedBlackColors.BLACK);
+        assert (root.color == BLACK);
         checkInvariantHelper(root);
         assert (blackHeight(root) != -1);
     }
@@ -359,6 +357,6 @@ public class RedBlackTree<T extends Comparable<T>> {
     private String toString(RedBlackNode cur) {
         if (cur == null)
             return "";
-        return cur.toString()+ " " + toString(cur.left) + " " + toString(cur.right);
+        return cur.toString() + " " + toString(cur.left) + " " + toString(cur.right);
     }
 }
