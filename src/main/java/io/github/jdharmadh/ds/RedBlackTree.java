@@ -29,7 +29,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     // ------------------------PUBLIC METHODS------------------------
-    public void put(T data) {
+    public T put(T data) {
         RedBlackNode prev = null;
         RedBlackNode cur = root;
         while (cur != null) {
@@ -39,8 +39,9 @@ public class RedBlackTree<T extends Comparable<T>> {
             } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
+                T oldData = cur.data;
                 cur.data = data;
-                return;
+                return oldData;
             }
         }
         size++;
@@ -56,18 +57,19 @@ public class RedBlackTree<T extends Comparable<T>> {
 
         if (cur.parent == null) {
             cur.color = BLACK;
-            return;
+            return null;
         }
 
         if (cur.parent.parent == null) {
             cur.color = RED;
-            return;
+            return null;
         }
 
         fixAfterInsertion(cur);
+        return null;
     }
 
-    public void remove(T data) {
+    public T remove(T data) {
         RedBlackNode cur = root;
         while (cur != null) {
             if (data.compareTo(cur.data) < 0) {
@@ -75,11 +77,13 @@ public class RedBlackTree<T extends Comparable<T>> {
             } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
+                T oldData = cur.data;
                 delete(cur);
                 size--;
-                return;
+                return oldData;
             }
         }
+        return null;
     }
 
     public T get(T data) {
@@ -101,24 +105,26 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     // ------------------------PUBLIC UTILS------------------------
-    public String toString() {
-        return toString(root);
-    }
-
     public void checkInvariant() {
         assert (getColor(root) == BLACK);
         checkInvariantHelper(root);
         assert (blackHeight(root) != -1);
     }
 
-    // ------------------------PRIVATE UTILS------------------------
-    private String toString(RedBlackNode cur) {
-        if (cur == null) {
-            return "";
-        }
-        return cur.toString() + " " + toString(cur.left) + " " + toString(cur.right);
+    public T min() {
+        return leftmost(root).data;
     }
 
+    public T max() {
+        return rightmost(root).data;
+    }
+
+    public void clear() {
+        root = null;
+        size = 0;
+    }
+
+    // ------------------------PRIVATE UTILS------------------------
     private RedBlackNode uncle(RedBlackNode node) {
         if (node.parent.parent.left == node.parent) {
             return node.parent.parent.right;
