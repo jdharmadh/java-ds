@@ -1,6 +1,8 @@
 package io.github.jdharmadh.ds;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     class Entry implements Map.Entry<K, V>, Comparable<Entry> {
@@ -97,6 +99,39 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
+    }
+
+    public Set<Map.Entry<K, V>> entrySet() {
+        Set<Map.Entry<K, V>> entries = new TreeSet<>();
+        for (Entry entry : tree.sortedData()) {
+            entries.add(entry);
+        }
+        return entries;
+    }
+
+    public Set<K> keySet() {
+        Set<K> keys = new TreeSet<>();
+        for (Map.Entry<K, V> entry : entrySet()) {
+            keys.add(entry.getKey());
+        }
+        return keys;
+    }
+
+    public Set<V> values() {
+        Set<V> values = new TreeSet<>();
+        for (Map.Entry<K, V> entry : entrySet()) {
+            values.add(entry.getValue());
+        }
+        return values;
+    }
+
+    public boolean containsValue(Object value) {
+        for (Map.Entry<K, V> entry : entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

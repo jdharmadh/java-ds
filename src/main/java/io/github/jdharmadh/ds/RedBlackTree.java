@@ -1,5 +1,9 @@
 package io.github.jdharmadh.ds;
 
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.TreeSet;
+
 public class RedBlackTree<T extends Comparable<T>> {
     private class RedBlackNode {
         T data;
@@ -122,6 +126,22 @@ public class RedBlackTree<T extends Comparable<T>> {
     public void clear() {
         root = null;
         size = 0;
+    }
+
+    public SortedSet<? extends T> sortedData() {
+        SortedSet<T> set = new TreeSet<T>();
+        RedBlackNode cur = root;
+        Stack<RedBlackNode> stack = new Stack<>();
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            set.add(cur.data);
+            cur = cur.right;
+        }
+        return set;
     }
 
     // ------------------------PRIVATE UTILS------------------------
