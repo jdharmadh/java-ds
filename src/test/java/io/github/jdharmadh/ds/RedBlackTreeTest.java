@@ -1,6 +1,4 @@
-
 package io.github.jdharmadh.ds;
-
 
 import static org.junit.Assert.*;
 
@@ -44,6 +42,7 @@ public class RedBlackTreeTest {
         tree.put(24);
         tree.put(29);
         tree.checkInvariant();
+        assertEquals(24, tree.size());
 
         assertEquals((Integer) 10, tree.get(10));
         assertEquals((Integer) 20, tree.get(20));
@@ -54,13 +53,16 @@ public class RedBlackTreeTest {
     @Test
     public void testputDuplicate() {
         tree.put(10);
+        assertEquals(1, tree.size());
         tree.put(10);
+        assertEquals(1, tree.size());
 
         assertEquals((Integer) 10, tree.get(10));
     }
 
     @Test
     public void testgetEmptyTree() {
+        assertEquals(0, tree.size());
         assertNull(tree.get(10));
     }
 
@@ -90,9 +92,11 @@ public class RedBlackTreeTest {
         tree.put(19);
         tree.put(24);
         tree.put(29);
+        assertEquals(24, tree.size());
 
         tree.remove(10);
         assertNull(tree.get(10));
+        assertEquals(23, tree.size());
         assertEquals((Integer) 20, tree.get(20));
         assertEquals((Integer) 5, tree.get(5));
         assertEquals((Integer) 15, tree.get(15));
@@ -101,6 +105,7 @@ public class RedBlackTreeTest {
 
         tree.remove(20);
         assertNull(tree.get(20));
+        assertEquals(22, tree.size());
         assertEquals((Integer) 5, tree.get(5));
         assertEquals((Integer) 15, tree.get(15));
         assertEquals((Integer) 25, tree.get(25));
@@ -109,6 +114,7 @@ public class RedBlackTreeTest {
 
         tree.remove(5);
         assertNull(tree.get(5));
+        assertEquals(21, tree.size());
         assertEquals((Integer) 15, tree.get(15));
         assertEquals((Integer) 25, tree.get(25));
         assertEquals((Integer) 30, tree.get(30));
@@ -117,6 +123,7 @@ public class RedBlackTreeTest {
 
         tree.remove(15);
         assertNull(tree.get(15));
+        assertEquals(20, tree.size());
         assertEquals((Integer) 25, tree.get(25));
         assertEquals((Integer) 30, tree.get(30));
         assertEquals((Integer) 1, tree.get(1));
@@ -125,6 +132,7 @@ public class RedBlackTreeTest {
 
         tree.remove(25);
         assertNull(tree.get(25));
+        assertEquals(19, tree.size());
         assertEquals((Integer) 30, tree.get(30));
         assertEquals((Integer) 1, tree.get(1));
         assertEquals((Integer) 7, tree.get(7));
@@ -133,6 +141,7 @@ public class RedBlackTreeTest {
 
         tree.remove(30);
         assertNull(tree.get(30));
+        assertEquals(18, tree.size());
         assertEquals((Integer) 1, tree.get(1));
         assertEquals((Integer) 7, tree.get(7));
         assertEquals((Integer) 12, tree.get(12));
@@ -141,6 +150,7 @@ public class RedBlackTreeTest {
 
         tree.remove(1);
         assertNull(tree.get(1));
+        assertEquals(17, tree.size());
         assertEquals((Integer) 7, tree.get(7));
         assertEquals((Integer) 12, tree.get(12));
         assertEquals((Integer) 17, tree.get(17));
@@ -149,6 +159,7 @@ public class RedBlackTreeTest {
 
         tree.remove(7);
         assertNull(tree.get(7));
+        assertEquals(16, tree.size());
         assertEquals((Integer) 12, tree.get(12));
         assertEquals((Integer) 17, tree.get(17));
         assertEquals((Integer) 22, tree.get(22));
@@ -157,6 +168,7 @@ public class RedBlackTreeTest {
 
         tree.remove(12);
         assertNull(tree.get(12));
+        assertEquals(15, tree.size());
         assertEquals((Integer) 17, tree.get(17));
         assertEquals((Integer) 22, tree.get(22));
         assertEquals((Integer) 27, tree.get(27));
@@ -165,6 +177,7 @@ public class RedBlackTreeTest {
 
         tree.remove(17);
         assertNull(tree.get(17));
+        assertEquals(14, tree.size());
         assertEquals((Integer) 22, tree.get(22));
         assertEquals((Integer) 27, tree.get(27));
         assertEquals((Integer) 3, tree.get(3));
@@ -173,6 +186,7 @@ public class RedBlackTreeTest {
 
         tree.remove(22);
         assertNull(tree.get(22));
+        assertEquals(13, tree.size());
         assertEquals((Integer) 27, tree.get(27));
         assertEquals((Integer) 3, tree.get(3));
         assertEquals((Integer) 8, tree.get(8));
@@ -181,6 +195,7 @@ public class RedBlackTreeTest {
 
         tree.remove(27);
         assertNull(tree.get(27));
+        assertEquals(12, tree.size());
         assertEquals((Integer) 3, tree.get(3));
         assertEquals((Integer) 8, tree.get(8));
         assertEquals((Integer) 13, tree.get(13));
@@ -193,6 +208,7 @@ public class RedBlackTreeTest {
         for (int i = 1; i < 2; i++) {
             tree.put(i);
             tree.checkInvariant();
+            assertEquals(i, tree.size());
         }
     }
 
@@ -202,6 +218,7 @@ public class RedBlackTreeTest {
         for (int i = 1; i < 30000; i++) {
             tree.put(Random.nextInt(1000));
             tree.checkInvariant();
+            assertTrue(tree.size() > 0);
             tree.remove(Random.nextInt(1000));
             tree.checkInvariant();
         }
@@ -221,6 +238,7 @@ public class RedBlackTreeTest {
                 assertNull(tree.get(r));
             }
             tree.checkInvariant();
+            assertTrue(tree.size() >= 0);
         }
     }
 }

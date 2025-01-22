@@ -21,9 +21,11 @@ public class RedBlackTree<T extends Comparable<T>> {
     static boolean RED = true;
     static boolean BLACK = false;
     private RedBlackNode root;
+    int size;
 
     public RedBlackTree() {
         this.root = null;
+        size = 0;
     }
 
     // ------------------------PUBLIC METHODS------------------------
@@ -41,6 +43,7 @@ public class RedBlackTree<T extends Comparable<T>> {
                 return;
             }
         }
+        size++;
         cur = new RedBlackNode(data);
         cur.parent = prev;
         if (prev == null) {
@@ -73,6 +76,7 @@ public class RedBlackTree<T extends Comparable<T>> {
                 cur = cur.right;
             } else {
                 delete(cur);
+                size--;
                 return;
             }
         }
@@ -90,6 +94,10 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
         return null;
+    }
+
+    public int size() {
+        return size;
     }
 
     // ------------------------PUBLIC UTILS------------------------
