@@ -98,7 +98,7 @@ public class RedBlackTree<T extends Comparable<T>> {
             } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
-                return data;
+                return cur.data;
             }
         }
         return null;
