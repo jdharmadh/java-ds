@@ -1,11 +1,12 @@
-package io.github.jdharmadh.ds;
+package io.github.jdharmadh.ds.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+
+import io.github.jdharmadh.ds.base.Interval;
 
 public class AugmentedIntervalTreeTest {
     private AugmentedIntervalTree<Integer> tree;

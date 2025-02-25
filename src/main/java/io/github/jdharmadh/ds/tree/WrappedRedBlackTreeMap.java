@@ -1,4 +1,4 @@
-package io.github.jdharmadh.ds;
+package io.github.jdharmadh.ds.tree;
 
 import java.util.Map;
 import java.util.Set;

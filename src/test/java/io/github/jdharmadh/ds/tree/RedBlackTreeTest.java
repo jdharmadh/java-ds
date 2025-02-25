@@ -1,4 +1,4 @@
-package io.github.jdharmadh.ds;
+package io.github.jdharmadh.ds.tree;
 
 import static org.junit.Assert.*;
 

@@ -1,51 +1,24 @@
-package io.github.jdharmadh.ds;
+package io.github.jdharmadh.ds.tree;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 
-public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
-    private class RedBlackNode implements Map.Entry<K, V>, Comparable<RedBlackNode> {
-        K key;
-        V value;
+public class RedBlackTree<T extends Comparable<T>> {
+    private class RedBlackNode {
+        T data;
         RedBlackNode left;
         RedBlackNode right;
         RedBlackNode parent;
         boolean color;
 
-        public RedBlackNode(K key, V value) {
-            this.key = key;
-            this.value = value;
+        public RedBlackNode(T data) {
+            this.data = data;
             this.color = RED;
         }
 
         public String toString() {
-            return key.toString();
-        }
-
-        @Override
-        public K getKey() {
-            return key;
-        }
-
-        @Override
-        public V getValue() {
-            return value;
-        }
-
-        @Override
-        public V setValue(V value) {
-            V oldValue = this.value;
-            this.value = value;
-            return oldValue;
-        }
-
-        @Override
-        public int compareTo(RedBlackNode o) {
-            return key.compareTo(o.key);
+            return data.toString();
         }
     }
 
@@ -54,34 +27,33 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private RedBlackNode root;
     int size;
 
-    public RedBlackTreeMap() {
+    public RedBlackTree() {
         this.root = null;
         size = 0;
     }
 
     // ------------------------PUBLIC METHODS------------------------
-    public V put(K key, V value) {
-        if (key == null) {
-            throw new IllegalArgumentException("Key cannot be null");
-        }
+    public T put(T data) {
         RedBlackNode prev = null;
         RedBlackNode cur = root;
         while (cur != null) {
             prev = cur;
-            if (key.compareTo(cur.key) < 0) {
+            if (data.compareTo(cur.data) < 0) {
                 cur = cur.left;
-            } else if (key.compareTo(cur.key) > 0) {
+            } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
-                return cur.setValue(value);
+                T oldData = cur.data;
+                cur.data = data;
+                return oldData;
             }
         }
         size++;
-        cur = new RedBlackNode(key, value);
+        cur = new RedBlackNode(data);
         cur.parent = prev;
         if (prev == null) {
             root = cur;
-        } else if (prev.key.compareTo(key) < 0) {
+        } else if (prev.data.compareTo(data) < 0) {
             prev.right = cur;
         } else {
             prev.left = cur;
@@ -101,55 +73,54 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public V remove(Object keyObject) {
-        if (keyObject == null) {
-            throw new IllegalArgumentException("Key cannot be null");
-        }
-        K key = (K) keyObject;
+    public T remove(T data) {
         RedBlackNode cur = root;
         while (cur != null) {
-            if (key.compareTo(cur.key) < 0) {
+            if (data.compareTo(cur.data) < 0) {
                 cur = cur.left;
-            } else if (key.compareTo(cur.key) > 0) {
+            } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
-                V oldValue = cur.value;
+                T oldData = cur.data;
                 delete(cur);
                 size--;
-                return oldValue;
+                return oldData;
             }
         }
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public V get(Object keyObject) {
-        if (keyObject == null) {
-            throw new IllegalArgumentException("Key cannot be null");
-        }
-        K key = (K) keyObject;
+    public T get(T data) {
         RedBlackNode cur = root;
         while (cur != null) {
-            if (key.compareTo(cur.key) < 0) {
+            if (data.compareTo(cur.data) < 0) {
                 cur = cur.left;
-            } else if (key.compareTo(cur.key) > 0) {
+            } else if (data.compareTo(cur.data) > 0) {
                 cur = cur.right;
             } else {
-                return cur.value;
+                return cur.data;
             }
         }
         return null;
+    }
+
+    public int size() {
+        return size;
     }
 
     // ------------------------PUBLIC UTILS------------------------
-
-    public V min() {
-        return leftmost(root).value;
+    public void checkInvariant() {
+        assert (getColor(root) == BLACK);
+        checkInvariantHelper(root);
+        assert (blackHeight(root) != -1);
     }
 
-    public V max() {
-        return rightmost(root).value;
+    public T min() {
+        return leftmost(root).data;
+    }
+
+    public T max() {
+        return rightmost(root).data;
     }
 
     public void clear() {
@@ -157,16 +128,8 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         size = 0;
     }
 
-    public int size() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public Set<Map.Entry<K,V>> entrySet() {
-        Set<Map.Entry<K,V>> set = new TreeSet<>();
+    public SortedSet<? extends T> sortedData() {
+        SortedSet<T> set = new TreeSet<T>();
         RedBlackNode cur = root;
         Stack<RedBlackNode> stack = new Stack<>();
         while (cur != null || !stack.isEmpty()) {
@@ -175,46 +138,10 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
                 cur = cur.left;
             }
             cur = stack.pop();
-            set.add(cur);
+            set.add(cur.data);
             cur = cur.right;
         }
         return set;
-    }
-
-    public Set<K> keySet() {
-        Set<K> set = new TreeSet<>();
-        for (Map.Entry<K,V> entry : entrySet()) {
-            set.add(entry.getKey());
-        }
-        return set;
-    }
-
-    public Set<V> values() {
-        Set<V> set = new HashSet<>();
-        for (Map.Entry<K,V> entry : entrySet()) {
-            set.add(entry.getValue());
-        }
-        return set;
-    }
-
-    public boolean containsKey(Object key) {
-        return get(key) != null;
-    }
-
-    // TODO: Make this more efficient
-    public boolean containsValue(Object value) {
-        for (Map.Entry<K,V> entry : entrySet()) {
-            if (entry.getValue().equals(value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void putAll(Map<? extends K, ? extends V> map) {
-        for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
     }
 
     // ------------------------PRIVATE UTILS------------------------
@@ -263,6 +190,30 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
         l.right = node;
         node.parent = l;
+    }
+
+    private void checkInvariantHelper(RedBlackNode cur) {
+        if (cur == null) {
+            return;
+        }
+        if (getColor(cur) == RED) {
+            assert (getColor(cur.left) != RED && getColor(cur.right) != RED);
+        }
+        checkInvariantHelper(cur.left);
+        checkInvariantHelper(cur.right);
+    }
+
+    private int blackHeight(RedBlackNode node) {
+        if (node == null) {
+            return 1;
+        }
+        int leftHeight = blackHeight(node.left);
+        int rightHeight = blackHeight(node.right);
+        assert (leftHeight == rightHeight);
+        if (leftHeight == -1 || rightHeight == -1 || leftHeight != rightHeight) {
+            return -1;
+        }
+        return leftHeight + (node.color == BLACK ? 1 : 0);
     }
 
     private void shiftNodes(RedBlackNode o, RedBlackNode n) {
@@ -354,8 +305,7 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         boolean originalColor = node.color;
         if (node.left != null && node.right != null) {
             RedBlackNode successor = successor(node);
-            node.key = successor.key;
-            node.value = successor.value;
+            node.data = successor.data;
             delete(successor);
             return;
         } else if (node.left != null || node.right != null) {
