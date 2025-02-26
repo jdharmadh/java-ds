@@ -6,13 +6,13 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Set;
 
-public class UndirectedGraphTest {
+public class DirectedGraphTest {
 
-    private UndirectedGraph<Integer> graph;
+    private DirectedGraph<Integer> graph;
 
     @Before
     public void setUp() {
-        graph = new UndirectedGraph<>();
+        graph = new DirectedGraph<>();
     }
 
     @Test
@@ -51,9 +51,7 @@ public class UndirectedGraphTest {
         graph.add(2);
         graph.addEdge(1, 2);
         Set<Integer> neighbors1 = graph.getNeighbors(1);
-        Set<Integer> neighbors2 = graph.getNeighbors(2);
         assertTrue(neighbors1.contains(2));
-        assertTrue(neighbors2.contains(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -69,9 +67,7 @@ public class UndirectedGraphTest {
         graph.addEdge(1, 2);
         graph.removeEdge(1, 2);
         Set<Integer> neighbors1 = graph.getNeighbors(1);
-        Set<Integer> neighbors2 = graph.getNeighbors(2);
         assertFalse(neighbors1.contains(2));
-        assertFalse(neighbors2.contains(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
