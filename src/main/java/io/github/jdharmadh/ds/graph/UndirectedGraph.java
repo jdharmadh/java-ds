@@ -87,7 +87,7 @@ public class UndirectedGraph<T> {
         return sb.toString();
     }
 
-    public List<T> pathBetween(T node1, T node2) {
+    public List<T> shortestPath(T node1, T node2) {
         if (node1 == null || node2 == null) {
             throw new IllegalArgumentException("Nodes cannot be null");
         }

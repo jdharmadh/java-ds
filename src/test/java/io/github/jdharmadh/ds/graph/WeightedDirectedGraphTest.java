@@ -6,13 +6,13 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Set;
 
-public class UndirectedGraphTest {
+public class WeightedDirectedGraphTest {
 
-    private UndirectedGraph<Integer> graph;
+    private WeightedDirectedGraph<Integer> graph;
 
     @Before
     public void setUp() {
-        graph = new UndirectedGraph<>();
+        graph = new WeightedDirectedGraph<>();
     }
 
     @Test
@@ -32,7 +32,7 @@ public class UndirectedGraphTest {
     public void testRemoveNode() {
         graph.add(1);
         graph.add(2);
-        graph.addEdge(1, 2);
+        graph.addEdge(1, 2, 1);
         graph.remove(1);
         Set<Integer> nodes = graph.getNodes();
         assertFalse(nodes.contains(1));
@@ -49,29 +49,25 @@ public class UndirectedGraphTest {
     public void testAddEdge() {
         graph.add(1);
         graph.add(2);
-        graph.addEdge(1, 2);
+        graph.addEdge(1, 2, 1);
         Set<Integer> neighbors1 = graph.getNeighbors(1);
-        Set<Integer> neighbors2 = graph.getNeighbors(2);
         assertTrue(neighbors1.contains(2));
-        assertTrue(neighbors2.contains(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddEdgeNonExistentNodes() {
         graph.add(1);
-        graph.addEdge(1, 2);
+        graph.addEdge(1, 2, 1);
     }
 
     @Test
     public void testRemoveEdge() {
         graph.add(1);
         graph.add(2);
-        graph.addEdge(1, 2);
+        graph.addEdge(1, 2, 1);
         graph.removeEdge(1, 2);
         Set<Integer> neighbors1 = graph.getNeighbors(1);
-        Set<Integer> neighbors2 = graph.getNeighbors(2);
         assertFalse(neighbors1.contains(2));
-        assertFalse(neighbors2.contains(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -85,8 +81,8 @@ public class UndirectedGraphTest {
         graph.add(1);
         graph.add(2);
         graph.add(3);
-        graph.addEdge(1, 2);
-        graph.addEdge(1, 3);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(1, 3, 1);
         Set<Integer> neighbors = graph.getNeighbors(1);
         assertEquals(2, neighbors.size());
         assertTrue(neighbors.contains(2));
@@ -106,24 +102,14 @@ public class UndirectedGraphTest {
     }
 
     @Test
-    public void testToString() {
-        graph.add(1);
-        graph.add(2);
-        graph.addEdge(1, 2);
-        String s = graph.toString();
-        assertTrue(s.contains("1"));
-        assertTrue(s.contains("2"));
-    }
-
-    @Test
     public void testPathBetween() {
         graph.add(1);
         graph.add(2);
         graph.add(3);
         graph.add(4);
-        graph.addEdge(1, 2);
-        graph.addEdge(2, 3);
-        graph.addEdge(2, 4);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(2, 3, 1);
+        graph.addEdge(2, 4, 1);
         List<Integer> path = graph.shortestPath(1, 3);
         assertNotNull(path);
         assertEquals(Integer.valueOf(1), path.get(0));
