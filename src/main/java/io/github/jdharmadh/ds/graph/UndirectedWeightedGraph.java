@@ -3,9 +3,12 @@ package io.github.jdharmadh.ds.graph;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import io.github.jdharmadh.ds.tree.UnionFind;
 
 public class UndirectedWeightedGraph<T> {
     private Map<T, Map<T, Integer>> adjacencyList;
@@ -141,6 +144,28 @@ public class UndirectedWeightedGraph<T> {
             return null;
         }
         return path.reversed();
+    }
+
+    public List<List<T>> minimumSpanningTree() {
+        List<List<T>> edges = new ArrayList<>();
+        List<List<T>> tree = new ArrayList<>();
+        for (T node1 : adjacencyList.keySet()) {
+            for (T node2 : adjacencyList.get(node1).keySet()){
+                edges.add(List.of(node1, node2));
+            }
+        }
+        Collections.sort(edges, (a,b) -> adjacencyList.get(a.get(0)).get(a.get(1)).compareTo(adjacencyList.get(b.get(0)).get(b.get(1))));
+        UnionFind<T> uf = new UnionFind<>();
+        for (T node : adjacencyList.keySet()) {
+            uf.add(node);
+        }
+        for(List<T> edge : edges) {
+            if (tree.size() >= adjacencyList.size() - 1) break;
+            if (uf.find(edge.get(0)).equals(uf.find(edge.get(1)))) continue;
+            uf.union(edge.get(0), edge.get(1));
+            tree.add(edge);
+        }
+        return tree;
     }
 
 }
