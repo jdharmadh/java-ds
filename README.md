@@ -17,6 +17,8 @@ Some Java implementations of fundamental data structures and algorithms. This re
 - `RedBlackTreeMap.java` - Map implementation using Red-Black tree (achieves similar perf to Java TreeMap)
 - `UnionFind.java` - Union-Find (Disjoint Set) data structure with union-by-rank and path compression
 
+### Sketch
+- `BloomFilter.java` - Bloom Filter for probabilistic membership queries (WIP)
 
 ## Future Additions
 
