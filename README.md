@@ -31,7 +31,6 @@ Planned additions include:
 - Binomial Heap
 - Segment Tree
 - HyperLogLog
-- Bloom Filter
 - CountMin Sketch
 - CountDistinct Sketch
 - MinHash (Locality Snsitive Hashing)
