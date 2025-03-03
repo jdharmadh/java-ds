@@ -6,13 +6,20 @@ import java.util.Set;
 
 public class BloomFilterCollisions {
     public static void main(String[] args) {
-        BloomFilter<String> bf = new BloomFilter<>(30, 2_500_000);
-        int numElements = 5_000_000;
+        falsePositiveRate(5_000_000, 30, 2_500_000);
+    }
+
+    private static double expectedFPR(int n, int k, int m) {
+        return Math.pow(1 - Math.pow(1 - 1.0 / m, n), k);
+    }
+
+    private static void falsePositiveRate(int n, int k, int m) {
+        BloomFilter<String> bf = new BloomFilter<>(k, m);
         Set<String> set = new HashSet<>();
         Random random = new Random();
 
-        System.out.println("Inserting " + numElements + " random strings...");
-        for (int i = 0; i < numElements; i++) {
+        System.out.println("Expected false positive rate: " + String.format("%.3f", expectedFPR(n, k, m)));
+        for (int i = 0; i < n; i++) {
             String randomString;
             do {
                 int length = random.nextInt(33) + 32; // between 32 and 64
@@ -21,47 +28,26 @@ public class BloomFilterCollisions {
 
             set.add(randomString);
             bf.add(randomString);
-
-            if ((i + 1) % 500_000 == 0) {
-                System.out.println((i + 1) + " strings inserted");
-            }
         }
 
-        System.out.println("Testing for false positives with " + numElements + " random strings...");
         int falsePositives = 0;
-        for (int i = 0; i < numElements; i++) {
+        for (int i = 0; i < n; i++) {
             int length = random.nextInt(33) + 32; // between 32 and 64
             String randomString = generateRandomString(length, random);
 
             if (!set.contains(randomString) && bf.contains(randomString)) {
                 falsePositives++;
             }
-
-            if ((i + 1) % 500_000 == 0) {
-                System.out.println((i + 1) + " strings tested");
-            }
         }
 
-        double falsePositiveRate = (double) falsePositives / numElements;
-        System.out.println("False positive rate: " + falsePositiveRate);
-        System.out.println("Number of false positives: " + falsePositives + " out of " + numElements);
-        System.out.println("Testing for false negatives with original elements...");
-        int falseNegatives = 0;
-        int testedElements = 0;
+        double falsePositiveRate = (double) falsePositives / n;
+        System.out.println("True false positive rate: " + String.format("%.3f", falsePositiveRate));
 
         for (String element : set) {
             if (!bf.contains(element)) {
-                falseNegatives++;
-            }
-
-            testedElements++;
-            if (testedElements % 500_000 == 0) {
-                System.out.println(testedElements + " original elements tested");
+                System.out.println("Error: false negative: ");
             }
         }
-
-        System.out.println("False negative rate: " + (double) falseNegatives / set.size());
-        System.out.println("Number of false negatives: " + falseNegatives + " out of " + set.size());
     }
 
     private static String generateRandomString(int length, Random random) {
