@@ -54,6 +54,9 @@ public class VanEmdeBoasTree {
             throw new IllegalArgumentException("Successor out of range: " + x);
         }
         if (base != null) {
+            if (base.isEmpty()) {
+                return sqrt_u * sqrt_u;
+            }
             if (x < min()) {
                 return min();
             }
