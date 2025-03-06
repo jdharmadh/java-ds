@@ -16,6 +16,7 @@ Some Java implementations of fundamental data structures and algorithms. This re
 - `RedBlackTree.java` - Red-Black balanced BST with full operations
 - `RedBlackTreeMap.java` - Map implementation using Red-Black tree (achieves similar perf to Java TreeMap)
 - `UnionFind.java` - Union-Find (Disjoint Set) data structure with union-by-rank and path compression
+- `VanEmdeBoasTree.java`- van Emde Boas Tree supporting integers and longs (with sizes 16, 256, 65536, 4294967296)
 
 ### Sketch
 - `BloomFilter.java` - Bloom Filter for probabilistic membership queries (WIP)
@@ -23,7 +24,6 @@ Some Java implementations of fundamental data structures and algorithms. This re
 ## Future Additions
 
 Planned additions include:
-- Van Emde Boas Tree
 - SkipList
 - Ford-Fulkerson max-flow/min-cut
 - AVL Tree

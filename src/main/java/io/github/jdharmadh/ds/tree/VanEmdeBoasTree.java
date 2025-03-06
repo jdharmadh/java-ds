@@ -1,10 +1,7 @@
 package io.github.jdharmadh.ds.tree;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.TreeSet;
 import java.util.Map;
-import java.util.Set;
 
 public class VanEmdeBoasTree {
     private long sqrt_u;
@@ -12,12 +9,12 @@ public class VanEmdeBoasTree {
     private long max = Long.MAX_VALUE;
     private Map<Long, VanEmdeBoasTree> cluster;
     private VanEmdeBoasTree summary;
-    private Set<Long> base;
+    private int[] base;
 
     public VanEmdeBoasTree(long u) {
         this.sqrt_u = (long) Math.sqrt(u);
         if (u == 4) {
-            base = new TreeSet<>();
+            base = new int[4];
             return;
         }
         cluster = new HashMap<>();
@@ -26,7 +23,7 @@ public class VanEmdeBoasTree {
 
     public void insert(long x) {
         if (base != null) {
-            base.add(x);
+            base[(int) x] = 1;
             return;
         }
         if (min == -1) {
@@ -54,7 +51,7 @@ public class VanEmdeBoasTree {
             throw new IllegalArgumentException("Successor out of range: " + x);
         }
         if (base != null) {
-            if (base.isEmpty()) {
+            if (isEmpty()) {
                 return sqrt_u * sqrt_u;
             }
             if (x < min()) {
@@ -63,8 +60,8 @@ public class VanEmdeBoasTree {
             if (x > max()) {
                 return sqrt_u * sqrt_u;
             }
-            for (long l : base) {
-                if (l > x) {
+            for (int l = 0; l < base.length; l++) {
+                if (base[l] == 1 && l > x) {
                     return l;
                 }
             }
@@ -103,10 +100,30 @@ public class VanEmdeBoasTree {
     }
 
     public long min() {
-        return base == null ? min : Collections.min(base);
+        if (base == null)
+            return min;
+        int m = base.length - 1;
+        for (int i = base.length - 1; i >= 0; i--)
+            if (base[i] == 1)
+                m = i;
+        return m;
     }
 
     public long max() {
-        return base == null ? max : Collections.max(base);
+        if (base == null)
+            return max;
+        int m = 0;
+        for (int i = 0; i < base.length; i++)
+            if (base[i] == 1)
+                m = i;
+        return m;
+    }
+
+    private boolean isEmpty() {
+        for (int i : base) {
+            if (i == 1)
+                return false;
+        }
+        return true;
     }
 }
