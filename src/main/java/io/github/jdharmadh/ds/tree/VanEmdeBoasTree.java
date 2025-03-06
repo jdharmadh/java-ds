@@ -7,24 +7,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class VanEmdeBoasTree {
-    private int sqrt_u;
-    private int min = -1;
-    private int max = Integer.MAX_VALUE;
-    private Map<Integer, VanEmdeBoasTree> cluster;
+    private long sqrt_u;
+    private long min = -1;
+    private long max = Long.MAX_VALUE;
+    private Map<Long, VanEmdeBoasTree> cluster;
     private VanEmdeBoasTree summary;
-    private Set<Integer> base;
+    private Set<Long> base;
 
-    public VanEmdeBoasTree(int u) {
-        this.sqrt_u = (int) Math.sqrt(u);
+    public VanEmdeBoasTree(long u) {
+        this.sqrt_u = (long) Math.sqrt(u);
         if (u == 4) {
             base = new TreeSet<>();
             return;
         }
-        cluster = new HashMap<>(sqrt_u);
+        cluster = new HashMap<>();
         summary = new VanEmdeBoasTree(sqrt_u);
     }
 
-    public void insert(int x) {
+    public void insert(long x) {
         if (base != null) {
             base.add(x);
             return;
@@ -35,7 +35,7 @@ public class VanEmdeBoasTree {
             return;
         }
         if (x < min) {
-            int temp = min;
+            long temp = min;
             min = x;
             x = temp;
         }
@@ -49,7 +49,7 @@ public class VanEmdeBoasTree {
         cluster.get(high(x)).insert(low(x));
     }
 
-    public int successor(int x) {
+    public long successor(long x) {
         if (x > sqrt_u * sqrt_u || x < 0) {
             throw new IllegalArgumentException("Successor out of range: " + x);
         }
@@ -63,7 +63,7 @@ public class VanEmdeBoasTree {
             if (x > max()) {
                 return sqrt_u * sqrt_u;
             }
-            for (int l : base) {
+            for (long l : base) {
                 if (l > x) {
                     return l;
                 }
@@ -76,8 +76,8 @@ public class VanEmdeBoasTree {
         if (x > max) {
             return sqrt_u * sqrt_u;
         }
-        int i = high(x);
-        int j = -1;
+        long i = high(x);
+        long j = -1;
         if (cluster.containsKey(i) && low(x) < cluster.get(i).max()) {
             j = cluster.get(i).successor(low(x));
         } else {
@@ -90,23 +90,23 @@ public class VanEmdeBoasTree {
         return index(i, j);
     }
 
-    private int low(int x) {
+    private long low(long x) {
         return x % sqrt_u;
     }
 
-    private int high(int x) {
+    private long high(long x) {
         return x / sqrt_u;
     }
 
-    private int index(int i, int j) {
+    private long index(long i, long j) {
         return i * sqrt_u + j;
     }
 
-    public int min() {
+    public long min() {
         return base == null ? min : Collections.min(base);
     }
 
-    public int max() {
+    public long max() {
         return base == null ? max : Collections.max(base);
     }
 }

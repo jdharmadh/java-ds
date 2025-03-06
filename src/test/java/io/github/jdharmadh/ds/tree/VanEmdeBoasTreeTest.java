@@ -10,7 +10,7 @@ public class VanEmdeBoasTreeTest {
     public void testInsertAndMinMax() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
         assertEquals(-1, tree.min());
-        assertEquals(Integer.MAX_VALUE, tree.max());
+        assertEquals(Long.MAX_VALUE, tree.max());
 
         tree.insert(5);
         assertEquals(5, tree.min());
