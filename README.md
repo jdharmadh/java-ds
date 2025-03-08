@@ -19,7 +19,8 @@ Some Java implementations of fundamental data structures and algorithms. This re
 - `VanEmdeBoasTree.java`- van Emde Boas Tree supporting integers and longs (with sizes 16, 256, 65536, 4294967296)
 
 ### Sketch
-- `BloomFilter.java` - Bloom Filter for probabilistic membership queries (WIP)
+- `BloomFilter.java` - Bloom Filter for probabilistic membership queries
+- `CountMinSketch.java` - Count-min sketch for estimating counts of events
 
 ## Future Additions
 
@@ -30,10 +31,8 @@ Planned additions include:
 - B-Tree
 - Binomial Heap
 - Segment Tree
-- HyperLogLog
-- CountMin Sketch
-- CountDistinct Sketch
-- MinHash (Locality Snsitive Hashing)
+- CountDistinct Sketch (HyperLogLog)
+- MinHash (Locality Sensitive Hashing)
 - Cuckoo Hash
 - 2-SAT linear-time implementation
 - Trie
