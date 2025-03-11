@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jdharmadh.ds.base.Interval;
+import io.github.jdharmadh.ds.util.Interval;
 
 public class AugmentedIntervalTreeTest {
     private AugmentedIntervalTree<Integer> tree;

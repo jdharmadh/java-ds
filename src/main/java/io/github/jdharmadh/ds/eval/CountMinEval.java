@@ -1,6 +1,8 @@
-package io.github.jdharmadh.ds.sketch;
+package io.github.jdharmadh.ds.eval;
 
 import java.util.HashMap;
+
+import io.github.jdharmadh.ds.sketch.CountMinSketch;
 
 public class CountMinEval {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package io.github.jdharmadh.ds.base;
+package io.github.jdharmadh.ds.util;
 
 public class Interval<T extends Comparable<T>> {
     public T start;

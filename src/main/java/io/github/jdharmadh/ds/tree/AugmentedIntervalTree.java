@@ -3,7 +3,7 @@ package io.github.jdharmadh.ds.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.jdharmadh.ds.base.Interval;
+import io.github.jdharmadh.ds.util.Interval;
 
 public class AugmentedIntervalTree<T extends Comparable<T>> {
     class IntervalTreeNode {

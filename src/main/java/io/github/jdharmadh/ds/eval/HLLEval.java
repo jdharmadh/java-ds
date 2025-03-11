@@ -1,5 +1,6 @@
-package io.github.jdharmadh.ds.sketch;
+package io.github.jdharmadh.ds.eval;
 
+import io.github.jdharmadh.ds.sketch.HyperLogLog;
 import io.github.jdharmadh.ds.util.Utils;
 import java.util.Random;
 

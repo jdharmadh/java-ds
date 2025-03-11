@@ -1,7 +1,6 @@
 package io.github.jdharmadh.ds.tree;
 
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
 
 public class VanEmdeBoasTreeTest {
@@ -37,13 +36,13 @@ public class VanEmdeBoasTreeTest {
         assertEquals(7, tree.successor(3));
         assertEquals(7, tree.successor(4));
         assertEquals(10, tree.successor(7));
-        assertEquals(16, tree.successor(10)); // Returns universe size when no successor
+        assertEquals(16, tree.successor(10));
     }
 
     @Test
     public void testSuccessorWithDenseData() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
-        // Insert all numbers from 0 to 15
+
         for (int i = 0; i < 16; i++) {
             tree.insert(i);
         }
@@ -51,7 +50,7 @@ public class VanEmdeBoasTreeTest {
         for (int i = 0; i < 15; i++) {
             assertEquals(i + 1, tree.successor(i));
         }
-        assertEquals(16, tree.successor(15)); // No successor for the largest element
+        assertEquals(16, tree.successor(15));
     }
 
     @Test
@@ -94,7 +93,7 @@ public class VanEmdeBoasTreeTest {
     public void testInsertDuplicates() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
         tree.insert(5);
-        tree.insert(5); // Insert duplicate
+        tree.insert(5);
 
         assertEquals(5, tree.min());
         assertEquals(5, tree.max());
@@ -105,20 +104,20 @@ public class VanEmdeBoasTreeTest {
     public void testSuccessorOutOfRangeNegative() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
         tree.insert(5);
-        tree.successor(-1); // Should throw IllegalArgumentException
+        tree.successor(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSuccessorOutOfRangePositive() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
         tree.insert(5);
-        tree.successor(17); // Should throw IllegalArgumentException
+        tree.successor(17);
     }
 
     @Test
     public void testSuccessorWithNoElements() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(16);
-        assertEquals(16, tree.successor(5)); // Should return universe size
+        assertEquals(16, tree.successor(5));
     }
 
     @Test
@@ -162,7 +161,7 @@ public class VanEmdeBoasTreeTest {
     @Test
     public void testManyConsecutiveInsertions() {
         VanEmdeBoasTree tree = new VanEmdeBoasTree(256);
-        // Insert multiples of 10
+
         for (int i = 0; i <= 250; i += 10) {
             tree.insert(i);
         }

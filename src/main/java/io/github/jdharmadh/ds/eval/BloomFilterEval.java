@@ -1,9 +1,10 @@
-package io.github.jdharmadh.ds.sketch;
+package io.github.jdharmadh.ds.eval;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import io.github.jdharmadh.ds.sketch.BloomFilter;
 import io.github.jdharmadh.ds.util.Utils;
 
 public class BloomFilterEval {

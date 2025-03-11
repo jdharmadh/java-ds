@@ -92,10 +92,8 @@ public class UnionFindTest {
         intUnionFind.union(3, 4);
         intUnionFind.union(4, 5);
 
-        // This will trigger path compression
         Integer root = intUnionFind.find(5);
 
-        // All elements should now point to the same root
         assertEquals(root, intUnionFind.find(1));
         assertEquals(root, intUnionFind.find(2));
         assertEquals(root, intUnionFind.find(3));
@@ -115,7 +113,6 @@ public class UnionFindTest {
         intUnionFind.union(1, 2);
         Integer root = intUnionFind.find(1);
 
-        // Union again should not change anything
         intUnionFind.union(1, 2);
         assertEquals(root, intUnionFind.find(1));
         assertEquals(root, intUnionFind.find(2));
@@ -123,26 +120,22 @@ public class UnionFindTest {
 
     @Test
     public void testLargeUnion() {
-        // Test with a larger number of elements
         for (int i = 0; i < 100; i++) {
             intUnionFind.add(i);
         }
 
-        // Create groups of 10
         for (int i = 0; i < 90; i += 10) {
             for (int j = 1; j < 10; j++) {
                 intUnionFind.union(i, i + j);
             }
         }
 
-        // Check all elements in each group
         for (int i = 0; i < 90; i += 10) {
             for (int j = 0; j < 10; j++) {
                 assertEquals(intUnionFind.find(i), intUnionFind.find(i + j));
             }
         }
 
-        // Different groups should have different roots
         for (int i = 0; i < 90; i += 10) {
             for (int j = 10; j < 90; j += 10) {
                 if (i != j) {
@@ -159,14 +152,11 @@ public class UnionFindTest {
         intUnionFind.add(3);
         intUnionFind.add(4);
 
-        // Create two trees with different ranks
-        intUnionFind.union(1, 2); // Rank of root will be 1
-        intUnionFind.union(3, 4); // Rank of root will be 1
+        intUnionFind.union(1, 2);
+        intUnionFind.union(3, 4);
 
-        // Union the two trees
         intUnionFind.union(1, 3);
 
-        // Find operations should now point to the same root
         assertEquals(intUnionFind.find(1), intUnionFind.find(3));
         assertEquals(intUnionFind.find(2), intUnionFind.find(4));
     }
