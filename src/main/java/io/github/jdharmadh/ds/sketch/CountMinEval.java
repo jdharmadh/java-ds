@@ -2,7 +2,7 @@ package io.github.jdharmadh.ds.sketch;
 
 import java.util.HashMap;
 
-public class CountMinTest {
+public class CountMinEval {
     public static void main(String[] args) {
         testCountMinSketchErrorGuarantee();
     }

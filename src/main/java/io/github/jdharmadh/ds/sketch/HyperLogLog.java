@@ -1,6 +1,6 @@
 package io.github.jdharmadh.ds.sketch;
 
-import io.github.jdharmadh.ds.util.Hashes;
+import io.github.jdharmadh.ds.util.Utils;
 
 public class HyperLogLog {
     private byte[] counters;
@@ -13,7 +13,7 @@ public class HyperLogLog {
     }
 
     public void add(Object data) {
-        int h = Hashes.hash(data);
+        int h = Utils.hash(data);
         int j = ((h >>> (32 - b)));
         byte rho_w = leftmost1(h << b);
         if (rho_w > counters[j])

@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class BloomFilterCollisions {
+import io.github.jdharmadh.ds.util.Utils;
+
+public class BloomFilterEval {
     public static void main(String[] args) {
         falsePositiveRate(5_000_000, 30, 2_500_000);
     }
@@ -22,8 +24,7 @@ public class BloomFilterCollisions {
         for (int i = 0; i < n; i++) {
             String randomString;
             do {
-                int length = random.nextInt(33) + 32; // between 32 and 64
-                randomString = generateRandomString(length, random);
+                randomString = Utils.generateRandomString(random);
             } while (set.contains(randomString));
 
             set.add(randomString);
@@ -32,8 +33,7 @@ public class BloomFilterCollisions {
 
         int falsePositives = 0;
         for (int i = 0; i < n; i++) {
-            int length = random.nextInt(33) + 32; // between 32 and 64
-            String randomString = generateRandomString(length, random);
+            String randomString = Utils.generateRandomString(random);
 
             if (!set.contains(randomString) && bf.contains(randomString)) {
                 falsePositives++;
@@ -48,14 +48,5 @@ public class BloomFilterCollisions {
                 System.out.println("Error: false negative: ");
             }
         }
-    }
-
-    private static String generateRandomString(int length, Random random) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
     }
 }

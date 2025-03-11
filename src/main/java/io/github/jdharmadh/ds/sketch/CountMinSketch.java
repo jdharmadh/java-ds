@@ -1,6 +1,6 @@
 package io.github.jdharmadh.ds.sketch;
 
-import io.github.jdharmadh.ds.util.Hashes;
+import io.github.jdharmadh.ds.util.Utils;
 
 public class CountMinSketch<T> {
     private int r;
@@ -15,7 +15,7 @@ public class CountMinSketch<T> {
 
     public void add(T event) {
         for (int i = 0; i < r; i++) {
-            int k = Math.floorMod(Hashes.seededHash(event, i), c);
+            int k = Math.floorMod(Utils.seededHash(event, i), c);
             store[i][k] += 1;
         }
     }
@@ -23,7 +23,7 @@ public class CountMinSketch<T> {
     public int query(T event) {
         int best = -1;
         for (int i = 0; i < r; i++) {
-            int k = Math.floorMod(Hashes.seededHash(event, i), c);
+            int k = Math.floorMod(Utils.seededHash(event, i), c);
             if (best == -1 || best > store[i][k]) best = store[i][k];
         }
         return best;

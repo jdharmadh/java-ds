@@ -1,11 +1,8 @@
-package io.github.jdharmadh.ds.util;
+package io.github.jdharmadh.ds.tree;
 
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
-
-import io.github.jdharmadh.ds.tree.RedBlackTreeMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,7 @@ import java.util.List;
  * Taken from:
  * https://gist.github.com/elimelt/f037fb289b27d53f592e17ae47a30edc#file-redblacktree-java
  */
-public class RedBlackTreeBenchmark {
+public class RBTreeBenchmark {
     static class BenchmarkResult {
         final int size;
         final double rbInsertions;
@@ -182,6 +179,6 @@ public class RedBlackTreeBenchmark {
     }
 
     public static void main(String[] args) {
-        RedBlackTreeBenchmark.benchmark();
+        RBTreeBenchmark.benchmark();
     }
 }
