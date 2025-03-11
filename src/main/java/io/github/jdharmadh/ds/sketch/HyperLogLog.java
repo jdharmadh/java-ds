@@ -4,11 +4,11 @@ import io.github.jdharmadh.ds.util.Utils;
 
 public class HyperLogLog {
     private byte[] counters;
-    private int b;
+    private byte b;
 
     public HyperLogLog(int m) {
         counters = new byte[m];
-        b = 31 - Integer.numberOfLeadingZeros(m);
+        b = (byte) (31 - Integer.numberOfLeadingZeros(m));
     }
 
     public void add(Object data) {
@@ -17,7 +17,9 @@ public class HyperLogLog {
         byte rho_w = leftmost1(h << b);
         if (rho_w > counters[j])
             counters[j] = rho_w;
-        if (counters[j] == 127) throw new OutOfMemoryError("Counter has reached max capacity");
+        if (counters[j] == 127) {
+            throw new OutOfMemoryError("Counter has reached max capacity");
+        }
     }
 
     public int count() {
