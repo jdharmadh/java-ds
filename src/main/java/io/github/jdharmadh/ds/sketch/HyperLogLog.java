@@ -9,7 +9,6 @@ public class HyperLogLog {
     public HyperLogLog(int m) {
         counters = new byte[m];
         b = 31 - Integer.numberOfLeadingZeros(m);
-        System.out.println(b);
     }
 
     public void add(Object data) {
@@ -18,6 +17,7 @@ public class HyperLogLog {
         byte rho_w = leftmost1(h << b);
         if (rho_w > counters[j])
             counters[j] = rho_w;
+        if (counters[j] == 127) throw new OutOfMemoryError("Counter has reached max capacity");
     }
 
     public int count() {

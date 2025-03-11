@@ -9,9 +9,11 @@ public class Utils {
 
     public static int hash(Object data) {
         int h = data != null ? data.hashCode() : 0;
-        int prime1 = PRIMES[Math.abs(h % PRIMES.length)];
-        int prime2 = PRIMES[Math.abs((h * 5 + 1) % PRIMES.length)];
-        h = ((h ^ prime1) * prime2) ^ (h >>> 16);
+        h ^= h >>> 16;
+        h *= 0x85ebca6b;
+        h ^= h >>> 13;
+        h *= 0xc2b2ae35;
+        h ^= h >>> 16;
 
         return h;
     }

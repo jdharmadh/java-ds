@@ -21,6 +21,7 @@ Some Java implementations of fundamental data structures and algorithms. This re
 ### Sketch
 - `BloomFilter.java` - Bloom Filter for probabilistic membership queries
 - `CountMinSketch.java` - Count-min sketch for estimating counts of events
+- `HyperLogLog.java` - HyperLogLog sketch for estimating number of distinct events in stream
 
 ## Future Additions
 
@@ -31,7 +32,6 @@ Planned additions include:
 - B-Tree
 - Binomial Heap
 - Segment Tree
-- CountDistinct Sketch (HyperLogLog)
 - MinHash (Locality Sensitive Hashing)
 - Cuckoo Hash
 - 2-SAT linear-time implementation
