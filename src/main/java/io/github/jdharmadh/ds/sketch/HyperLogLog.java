@@ -3,8 +3,8 @@ package io.github.jdharmadh.ds.sketch;
 import io.github.jdharmadh.ds.util.Utils;
 
 public class HyperLogLog {
-    private byte[] counters;
-    private byte b;
+    byte[] counters;
+    byte b;
 
     public HyperLogLog(int m) {
         counters = new byte[m];
@@ -14,7 +14,7 @@ public class HyperLogLog {
     public void add(Object data) {
         int h = Utils.hash(data);
         int j = ((h >>> (32 - b)));
-        byte rho_w = leftmost1(h << b);
+        byte rho_w = (byte) (Integer.numberOfLeadingZeros(h << b) + 1);
         if (rho_w > counters[j])
             counters[j] = rho_w;
         if (counters[j] == 127) {
@@ -43,7 +43,14 @@ public class HyperLogLog {
         }
     }
 
-    private byte leftmost1(int x) {
-        return (byte) (Integer.numberOfLeadingZeros(x) + 1);
+    public void merge(HyperLogLog other) {
+        if (b != other.b) {
+            throw new IllegalArgumentException("Mismatched precisions for merging HLLs");
+        }
+        for (int i = 0; i < counters.length; i++) {
+            if (other.counters[i] > counters[i]) {
+                counters[i] = other.counters[i];
+            }
+        }
     }
 }
