@@ -5,6 +5,27 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class BinomialHeap {
+    private class BinomialNode {
+        int data;
+        BinomialNode parent;
+        List<BinomialNode> children;
+
+        public BinomialNode(int data, BinomialNode parent) {
+            this.data = data;
+            this.parent = parent;
+            this.children = new ArrayList<>();
+        }
+
+        public int order() {
+            return children.size();
+        }
+
+        public void merge(BinomialNode node) {
+            children.add(node);
+            node.parent = this;
+        }
+    }
+
     private BinomialNode[] nodes = new BinomialNode[8];
     private int size = 0;
 
@@ -21,16 +42,20 @@ public class BinomialHeap {
     }
 
     public int findMin() {
+        if (size == 0) {
+            throw new NoSuchElementException();
+        }
         return nodes[indexOfMin()].data;
     }
 
     public int deleteMin() {
-        if (size == 0)
+        if (size == 0) {
             throw new NoSuchElementException();
+        }
         int min = indexOfMin();
         BinomialNode node = nodes[min];
         nodes[min] = null;
-        for (BinomialNode b : node.nodes) {
+        for (BinomialNode b : node.children) {
             b.parent = null;
             mergeIntoHeap(b);
         }
@@ -73,36 +98,5 @@ public class BinomialHeap {
                 minIndex = i;
         }
         return minIndex;
-    }
-
-    public static void main(String[] args) {
-        BinomialHeap bn = new BinomialHeap();
-        for (int i = 30; i > 0; i--) {
-            bn.insert(i % 4);
-        }
-        while (bn.size() != 0) {
-            System.out.println(bn.deleteMin());
-        }
-    }
-}
-
-class BinomialNode {
-    int data;
-    BinomialNode parent;
-    List<BinomialNode> nodes;
-
-    public BinomialNode(int data, BinomialNode parent) {
-        this.data = data;
-        this.parent = parent;
-        this.nodes = new ArrayList<>();
-    }
-
-    public int order() {
-        return nodes.size();
-    }
-
-    public void merge(BinomialNode node) {
-        nodes.add(node);
-        node.parent = this;
     }
 }
