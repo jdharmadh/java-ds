@@ -16,6 +16,44 @@ public class UndirectedGraph<T> {
         adjacencyList = new HashMap<>();
     }
 
+    public UndirectedGraph(List<Integer> pruferCode, Map<Integer, T> labels) {
+        adjacencyList = new HashMap<>();
+        int n = pruferCode.size() + 2;
+        for (T node : labels.values()) {
+            adjacencyList.put(node, new HashSet<>());
+        }
+        int[] degree = new int[n];
+        for (int i = 0; i < n; i++) {
+            degree[i] = 1;
+        }
+        for (int a : pruferCode) {
+            degree[a] += 1;
+        }
+        for (int i : pruferCode) {
+            for (int j = 0; j < n; j++) {
+                if (degree[j] == 1) {
+                    addEdge(labels.get(i), labels.get(j));
+                    degree[i]--;
+                    degree[j]--;
+                    break;
+                }
+            }
+        }
+        int u = -1;
+        int v = -1;
+        for (int i = 0; i < n; i++) {
+            if (degree[i] == 1) {
+                if (u == -1) {
+                    u = i;
+                } else {
+                    v = i;
+                    break;
+                }
+            }
+        }
+        addEdge(labels.get(u), labels.get(v));
+    }
+
     public void add(T node) {
         if (node == null) {
             throw new IllegalArgumentException("Value cannot be null");
@@ -135,5 +173,42 @@ public class UndirectedGraph<T> {
             }
         }
         return null;
+    }
+
+    public List<Integer> pruferSequence(Map<T, Integer> labels) {
+        if (!isTree()) {
+            throw new UnsupportedOperationException("Graph is not a tree");
+        }
+        int n = adjacencyList.size();
+        Map<Integer, T> indexNode = new HashMap<>();
+        for (T node : labels.keySet()) {
+            indexNode.put(labels.get(node), node);
+        }
+        int[] degree = new int[n];
+        for (T node : adjacencyList.keySet()) {
+            degree[labels.get(node)] = adjacencyList.get(node).size();
+        }
+        List<Integer> prufer = new ArrayList<>();
+        for (int i = 0; i < n - 2; i++) {
+            int leaf = -1;
+            for (int j = 0; j < n; j++) {
+                if (degree[j] == 1) {
+                    leaf = j;
+                    break;
+                }
+            }
+            if (leaf == -1) {
+                throw new IllegalStateException("No leaf found");
+            }
+            degree[leaf]--;
+            for (T neighbor : adjacencyList.get(indexNode.get(leaf))) {
+                if (degree[labels.get(neighbor)] == 0) {
+                    continue;
+                }
+                degree[labels.get(neighbor)]--;
+                prufer.add(labels.get(neighbor));
+            }
+        }
+        return prufer;
     }
 }

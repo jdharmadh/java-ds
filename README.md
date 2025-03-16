@@ -6,6 +6,7 @@ Some Java implementations of fundamental data structures and algorithms. This re
 - `UndirectedGraph.java` 
 - `UndirectedWeightedGraph.java`
 - `WeightedDirectedGraph.java`
+- Algorithms for generating Prüfer codes, minimum spanning trees, etc.
 
 ### Tree
 - `AugmentedIntervalTree.java` - Interval tree (augmented BST)

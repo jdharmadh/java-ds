@@ -3,7 +3,10 @@ package io.github.jdharmadh.ds.graph;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class UndirectedGraphTest {
@@ -175,5 +178,141 @@ public class UndirectedGraphTest {
     @Test
     public void testIsTreeEmptyGraph() {
         assertTrue(graph.isTree());
+    }
+
+    @Test
+    public void testPruferSequenceLinearTree() {
+        UndirectedGraph<Integer> graph = new UndirectedGraph<>();
+        graph.add(1);
+        graph.add(2);
+        graph.add(3);
+        graph.add(4);
+        graph.add(5);
+        
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+        graph.addEdge(4, 5);
+        
+        Map<Integer, Integer> labels = new HashMap<>();
+        Map<Integer, Integer> reverseLabels = new HashMap<>();
+        int index = 0;
+        for (Integer node : graph.getNodes()) {
+            labels.put(node, index);
+            reverseLabels.put(index, node);
+            index++;
+        }
+        
+        List<Integer> prufer = graph.pruferSequence(labels);
+        assertEquals(3, prufer.size());
+        
+        UndirectedGraph<Integer> newGraph = new UndirectedGraph<>(prufer, reverseLabels);
+        
+        assertEquals(graph.size(), newGraph.size());
+        
+        for (Integer node : graph.getNodes()) {
+            assertTrue(newGraph.getNodes().contains(node));
+            assertEquals(graph.getNeighbors(node), newGraph.getNeighbors(node));
+        }
+    }
+
+    @Test
+    public void testPruferSequenceStarTree() {
+        UndirectedGraph<String> graph = new UndirectedGraph<>();
+        graph.add("center");
+        graph.add("a");
+        graph.add("b");
+        graph.add("c");
+        graph.add("d");
+        
+        graph.addEdge("center", "a");
+        graph.addEdge("center", "b");
+        graph.addEdge("center", "c");
+        graph.addEdge("center", "d");
+        
+        Map<String, Integer> labels = new HashMap<>();
+        Map<Integer, String> reverseLabels = new HashMap<>();
+        int index = 0;
+        for (String node : graph.getNodes()) {
+            labels.put(node, index);
+            reverseLabels.put(index, node);
+            index++;
+        }
+        
+        List<Integer> prufer = graph.pruferSequence(labels);
+        assertEquals(3, prufer.size());
+        
+        int centerIdx = labels.get("center");
+        for (int code : prufer) {
+            assertEquals(centerIdx, code);
+        }
+        
+        UndirectedGraph<String> newGraph = new UndirectedGraph<>(prufer, reverseLabels);
+        assertEquals(graph.size(), newGraph.size());
+        
+        for (String node : graph.getNodes()) {
+            assertTrue(newGraph.getNodes().contains(node));
+            assertEquals(graph.getNeighbors(node).size(), newGraph.getNeighbors(node).size());
+        }
+    }
+
+    @Test
+    public void testPruferSequenceBinaryTree() {
+        UndirectedGraph<Integer> graph = new UndirectedGraph<>();
+        for (int i = 1; i <= 7; i++) {
+            graph.add(i);
+        }
+        
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(2, 4);
+        graph.addEdge(2, 5);
+        graph.addEdge(3, 6);
+        graph.addEdge(3, 7);
+        
+        Map<Integer, Integer> labels = new HashMap<>();
+        Map<Integer, Integer> reverseLabels = new HashMap<>();
+        int index = 0;
+        for (Integer node : graph.getNodes()) {
+            labels.put(node, index);
+            reverseLabels.put(index, node);
+            index++;
+        }
+        
+        List<Integer> prufer = graph.pruferSequence(labels);
+        assertEquals(5, prufer.size());
+        
+        UndirectedGraph<Integer> newGraph = new UndirectedGraph<>(prufer, reverseLabels);
+        
+        assertEquals(graph.size(), newGraph.size());
+        for (Integer node : graph.getNodes()) {
+            assertTrue(newGraph.getNodes().contains(node));
+            assertEquals(graph.getNeighbors(node).size(), newGraph.getNeighbors(node).size());
+            
+            for (Integer neighbor : graph.getNeighbors(node)) {
+                assertTrue(newGraph.getNeighbors(node).contains(neighbor));
+            }
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testPruferSequenceNonTree() {
+        UndirectedGraph<Integer> graph = new UndirectedGraph<>();
+        graph.add(1);
+        graph.add(2);
+        graph.add(3);
+        graph.add(4);
+        
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+        graph.addEdge(4, 1); // Creates a cycle
+        
+        Map<Integer, Integer> labels = new HashMap<>();
+        for (Integer node : graph.getNodes()) {
+            labels.put(node, node - 1);
+        }
+        
+        graph.pruferSequence(labels); // Should throw exception
     }
 }
