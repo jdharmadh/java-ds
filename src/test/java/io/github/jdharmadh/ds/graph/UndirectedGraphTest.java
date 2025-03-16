@@ -133,4 +133,47 @@ public class UndirectedGraphTest {
         graph.add(1);
         graph.shortestPath(1, 2);
     }
+
+    @Test
+    public void testIsTreeValid() {
+        graph.add(1);
+        graph.add(2);
+        graph.add(3);
+        graph.add(4);
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+
+        assertTrue(graph.isTree());
+    }
+
+    @Test
+    public void testIsTreeWithCycle() {
+        graph.add(1);
+        graph.add(2);
+        graph.add(3);
+        graph.add(4);
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+        graph.addEdge(4, 1);
+
+        assertFalse(graph.isTree());
+    }
+
+    @Test
+    public void testIsTreeDisconnected() {
+        graph.add(1);
+        graph.add(2);
+        graph.add(3);
+        graph.add(4);
+        graph.addEdge(1, 2);
+
+        assertFalse(graph.isTree());
+    }
+
+    @Test
+    public void testIsTreeEmptyGraph() {
+        assertTrue(graph.isTree());
+    }
 }

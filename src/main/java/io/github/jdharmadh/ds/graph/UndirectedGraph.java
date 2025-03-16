@@ -79,6 +79,31 @@ public class UndirectedGraph<T> {
         return adjacencyList.isEmpty();
     }
 
+    public boolean isTree() {
+        if (adjacencyList.isEmpty()) {
+            return true;
+        }
+        Map<T, T> parent = new HashMap<>();
+        Queue<T> queue = new LinkedList<>();
+        T start = adjacencyList.keySet().iterator().next();
+        parent.put(start, null);
+        queue.add(start);
+        while (!queue.isEmpty()) {
+            T node = queue.remove();
+            for (T neighbor : adjacencyList.get(node)) {
+                if (parent.get(node) != null && neighbor.equals(parent.get(node))) {
+                    continue;
+                }
+                if (parent.containsKey(neighbor)) {
+                    return false;
+                }
+                parent.put(neighbor, node);
+                queue.add(neighbor);
+            }
+        }
+        return parent.size() == adjacencyList.size();
+    }
+
     public List<T> shortestPath(T node1, T node2) {
         if (node1 == null || node2 == null) {
             throw new IllegalArgumentException("Nodes cannot be null");
