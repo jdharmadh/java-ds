@@ -3,45 +3,10 @@ package io.github.jdharmadh.ds.tree;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import io.github.jdharmadh.ds.util.SimpleEntry;
 
 public class WrappedRedBlackTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
-    class Entry implements Map.Entry<K, V>, Comparable<Entry> {
-        K key;
-        V value;
-
-        public Entry(K k, V v) {
-            key = k;
-            value = v;
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-        public V setValue(V val) {
-            V oldVal = value;
-            value = val;
-            return oldVal;
-        }
-
-        public String toString() {
-            return key + "=" + value;
-        }
-
-        public int hashCode() {
-            return key.hashCode() ^ value.hashCode();
-        }
-
-        public int compareTo(Entry other) {
-            return ((Comparable<K>) key).compareTo(other.getKey());
-        }
-    }
-
-    private RedBlackTree<Entry> tree;
+    private RedBlackTree<SimpleEntry<K, V>> tree;
 
     public WrappedRedBlackTreeMap() {
         tree = new RedBlackTree<>();
@@ -51,11 +16,8 @@ public class WrappedRedBlackTreeMap<K extends Comparable<K>, V> implements Map<K
         if (key == null) {
             throw new IllegalArgumentException("Key cannot be null");
         }
-        if (value == null) {
-            throw new IllegalArgumentException("Value cannot be null");
-        }
-        Entry entry = new Entry(key, value);
-        Entry returned = tree.put(entry);
+        SimpleEntry<K, V> entry = new SimpleEntry<>(key, value);
+        SimpleEntry<K, V> returned = tree.put(entry);
         return returned == null ? null : returned.getValue();
     }
 
@@ -64,8 +26,8 @@ public class WrappedRedBlackTreeMap<K extends Comparable<K>, V> implements Map<K
             throw new IllegalArgumentException("Key cannot be null");
         }
         @SuppressWarnings("unchecked")
-        Entry entry = new Entry((K) key, null);
-        Entry returned = tree.get(entry);
+        SimpleEntry<K, V> entry = new SimpleEntry<>((K) key, null);
+        SimpleEntry<K, V> returned = tree.get(entry);
         return returned == null ? null : returned.getValue();
     }
 
@@ -74,8 +36,8 @@ public class WrappedRedBlackTreeMap<K extends Comparable<K>, V> implements Map<K
             throw new IllegalArgumentException("Key cannot be null");
         }
         @SuppressWarnings("unchecked")
-        Entry entry = new Entry((K) key, null);
-        Entry returned = tree.remove(entry);
+        SimpleEntry<K, V> entry = new SimpleEntry<>((K) key, null);
+        SimpleEntry<K, V> returned = tree.remove(entry);
         return returned == null ? null : returned.getValue();
     }
 
@@ -103,7 +65,7 @@ public class WrappedRedBlackTreeMap<K extends Comparable<K>, V> implements Map<K
 
     public Set<Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K, V>> entries = new TreeSet<>();
-        for (Entry entry : tree.sortedData()) {
+        for (SimpleEntry<K, V> entry : tree.sortedData()) {
             entries.add(entry);
         }
         return entries;
