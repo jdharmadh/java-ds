@@ -18,23 +18,23 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     public static final int INITIAL_BUCKETS = 8;
-    private ChainEntry[] buckets;
+    private Object[] buckets;
     private int size;
 
     public ChainedHashTable() {
-        buckets = (ChainEntry[]) new Object[INITIAL_BUCKETS];
+        buckets = new Object[INITIAL_BUCKETS];
         size = 0;
     }
 
     public V put(K key, V value) {
         // TODO: resize based on load factor
-        int bucket = Utils.hash(key) % buckets.length;
+        int bucket = Math.floorMod(Utils.hash(key), buckets.length);
         if (buckets[bucket] == null) {
             buckets[bucket] = new ChainEntry(key, value);
             size++;
             return null;
         }
-        ChainEntry curr = buckets[bucket];
+        ChainEntry curr = ((ChainEntry) buckets[bucket]);
         while (curr != null) {
             if (curr.getKey().equals(key)) {
                 return curr.setValue(value);
@@ -57,8 +57,8 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     public V get(Object key) {
-        int bucket = Utils.hash(key) % buckets.length;
-        ChainEntry curr = buckets[bucket];
+        int bucket = Math.floorMod(Utils.hash(key), buckets.length);
+        ChainEntry curr = ((ChainEntry) buckets[bucket]);
         while (curr != null) {
             if (curr.getKey().equals(key)) {
                 return curr.getValue();
@@ -69,8 +69,8 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     public V remove(Object key) {
-        int bucket = Utils.hash(key) % buckets.length;
-        ChainEntry curr = buckets[bucket];
+        int bucket = Math.floorMod(Utils.hash(key), buckets.length);
+        ChainEntry curr = ((ChainEntry) buckets[bucket]);
         if (curr.getKey().equals(key)) {
             buckets[bucket] = curr.next;
             size--;
@@ -90,8 +90,8 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
 
     public Set<K> keySet() {
         Set<K> keys = new HashSet<>();
-        for (ChainEntry c : buckets) {
-            ChainEntry curr = c;
+        for (Object c : buckets) {
+            ChainEntry curr = (ChainEntry) c;
             while (curr != null) {
                 keys.add(curr.getKey());
                 curr = curr.next;
@@ -102,8 +102,8 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
 
     public Set<V> values() {
         Set<V> values = new HashSet<>();
-        for (ChainEntry c : buckets) {
-            ChainEntry curr = c;
+        for (Object c : buckets) {
+            ChainEntry curr = (ChainEntry) c;
             while (curr != null) {
                 values.add(curr.getValue());
                 curr = curr.next;
@@ -114,8 +114,8 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
 
     public Set<Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K, V>> entries = new HashSet<>();
-        for (ChainEntry c : buckets) {
-            entries.add(c);
+        for (Object c : buckets) {
+            entries.add((ChainEntry) c);
         }
         return entries;
     }
@@ -130,7 +130,7 @@ public class ChainedHashTable<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     public void clear() {
-        buckets = (ChainEntry[]) new Object[INITIAL_BUCKETS];
+        buckets = new Object[INITIAL_BUCKETS];
         size = 0;
     }
 
