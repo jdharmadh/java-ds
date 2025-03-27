@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jdharmadh.ds.table.ChainedHashTable;
+import io.github.jdharmadh.ds.table.LinearProbeTable;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,7 +15,7 @@ public class MapTest {
 
     @Before
     public void setUp() {
-        map = new ChainedHashTable<>();
+        map = new LinearProbeTable<>();
     }
 
     @Test
@@ -82,7 +82,7 @@ public class MapTest {
         }
 
         for (int i = 0; i < 1000; i++) {
-            map.remove(i);
+            assertEquals(map.remove(i), "value" + i);
             assertNull(map.get(i));
         }
 
